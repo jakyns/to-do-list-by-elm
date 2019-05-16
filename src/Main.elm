@@ -1,8 +1,8 @@
 module Main exposing (Model, init, main)
 
 import Browser
-import Html exposing (Html, button, div, input, li, text, ul)
-import Html.Attributes exposing (value)
+import Html exposing (Html, button, div, h1, input, li, text, ul)
+import Html.Attributes exposing (class, value)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -15,7 +15,7 @@ type alias Model =
 init : Model
 init =
     { item = ""
-    , listItem = [ "bank", "bankbank" ]
+    , listItem = [ "first", "second" ]
     }
 
 
@@ -43,19 +43,32 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ input [ onInput InputItem, value model.item ] []
-        , button [ onClick AddItem ] [ text "submit" ]
-        , div [] [ text model.item ]
-        , ul [] (List.map viewItem model.listItem)
+    div [ class "content" ]
+        [ h1 [ class "title is-1" ] [ text "To-do List" ]
+        , div [ class "columns" ]
+            [ div [ class "column is-one-fifth" ] []
+            , div [ class "column is-half" ]
+                [ input
+                    [ onInput InputItem, class "input", value model.item ]
+                    []
+                ]
+            , div [ class "column is-one-fifth" ]
+                [ button [ onClick AddItem, class "button is-primary" ]
+                    [ text "submit" ]
+                ]
+            ]
+        , div []
+            [ div [ class "panel-heading" ] [ text model.item ]
+            , div []
+                [ ul [ class "list" ] (List.map viewItem model.listItem) ]
+            ]
         ]
 
 
 viewItem : String -> Html msg
 viewItem item =
-    li []
-        [ text ("TODO: " ++ item)
-        ]
+    li [ class "list-item" ]
+        [ text ("TODO: " ++ item) ]
 
 
 main =

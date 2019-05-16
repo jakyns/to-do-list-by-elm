@@ -1,4 +1,5 @@
 import './main.css';
+import '../node_modules/bulma/css/bulma.css';
 import { Elm } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
