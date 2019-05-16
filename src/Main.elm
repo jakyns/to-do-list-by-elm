@@ -23,6 +23,7 @@ type Msg
     = Noop
     | AddItem
     | InputItem String
+    | MarkAsComplete String
 
 
 update : Msg -> Model -> Model
@@ -40,35 +41,42 @@ update msg model =
         InputItem newInput ->
             { model | item = newInput }
 
+        MarkAsComplete item ->
+            { model | listItem = List.filter (\i -> i /= item) model.listItem }
+
 
 view : Model -> Html Msg
 view model =
     div [ class "content" ]
         [ h1 [ class "title is-1" ] [ text "To-do List" ]
         , div [ class "columns" ]
-            [ div [ class "column is-one-fifth" ] []
-            , div [ class "column is-half" ]
-                [ input
-                    [ onInput InputItem, class "input", value model.item ]
-                    []
-                ]
-            , div [ class "column is-one-fifth" ]
-                [ button [ onClick AddItem, class "button is-primary" ]
-                    [ text "submit" ]
-                ]
+            [ div [ class "column is-two-fifths" ] []
+            , div [ class "column" ]
+                [ input [ onInput InputItem, class "input", value model.item ] [] ]
+            , div [ class "column" ]
+                [ button [ onClick AddItem, class "button is-primary is-pulled-left" ] [ text "submit" ] ]
+            , div [ class "column" ] []
             ]
         , div []
             [ div [ class "panel-heading" ] [ text model.item ]
-            , div []
-                [ ul [ class "list" ] (List.map viewItem model.listItem) ]
+            , div [] [ ul [ class "list" ] (List.map viewItem model.listItem) ]
             ]
         ]
 
 
-viewItem : String -> Html msg
+viewItem : String -> Html Msg
 viewItem item =
     li [ class "list-item" ]
-        [ text ("TODO: " ++ item) ]
+        [ div [ class "columns" ]
+            [ div [ class "column" ] []
+            , div [ class "column" ] [ text ("TODO: " ++ item) ]
+            , div [ class "column" ]
+                [ button [ onClick (MarkAsComplete item), class "button is-primary" ]
+                    [ text "complete" ]
+                ]
+            , div [ class "column" ] []
+            ]
+        ]
 
 
 main =
